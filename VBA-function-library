@@ -2,24 +2,24 @@
 ' Unclassified
 ' ================================================================================================
 
-Function inList(value, list) As Boolean
-' Check if the given value exists in the given list.
+Function inList(val, list) As Boolean
+' Check if the given val exists in the given list.
 '
     Dim V2 As Variant
     
     For Each V2 In list
-        If value = V2 Then
+        If val = V2 Then
             inList = True
             Exit Function
         End If
     Next V2
 End Function
 
-Function pushToList(value, list)
-' Append the given value to the given list.
+Function pushToList(val, list)
+' Append the given val to the given list.
 '
     ReDim Preserve list(LBound(list) To UBound(list) + 1)
-    list(UBound(list)) = value
+    list(UBound(list)) = val
 End Function
 
 Function toString(num) As String
@@ -294,12 +294,12 @@ End Function
 ' QuickSort (for array of values and array of arrays)
 ' ================================================================================================
 
-Function swapValues(value1, value2)
+Function swapValues(val1, val2)
     Dim V2 As Variant
     
-    V2 = value1
-    value1 = value2
-    value2 = V2
+    V2 = val1
+    val1 = val2
+    val2 = V2
 End Function
 
 Function quickSortArr(Arr, Optional r1 = -1, Optional rN = -1)
@@ -425,13 +425,13 @@ End Function
 ' Direct interaction with Excel
 ' ================================================================================================
 
-Function testCreateButton()
+Sub testCreateButton()
     Workbooks.Add
     
     createButton Range("D5:G10"), "Test" & Chr(10) & "Button"
-End Function
+End Sub
 
-Function createButton(PositionRng, ButtonText, Optional OnAction = "doNothing")
+Function createButton(PositionRng, ButtonText, Optional CallFunction = "doNothing")
     With PositionRng
         ActiveSheet.Buttons.Add(.Left, .Top, .Width, .Height).Text = ButtonText
     End With
@@ -439,7 +439,7 @@ Function createButton(PositionRng, ButtonText, Optional OnAction = "doNothing")
     With ActiveSheet
         With .Shapes(.Shapes.Count)
             .Placement = xlMoveAndSize
-            .OnAction = OnAction
+            .OnAction = CallFunction
         End With
     End With
 End Function
@@ -459,4 +459,59 @@ Function PrintArr2D(Arr2D, Optional r1 = 1, Optional c1 = 1)
     rN = UBound(Arr2D) - LBound(Arr2D) + 1
     cN = UBound(Arr2D, 2) - LBound(Arr2D, 2) + 1
     Cells(r1, c1).Resize(rN, cN).value2 = Arr2D
+End Function
+
+Sub testScan()
+    Dim r2 As Long
+    Dim c2 As Long
+    topLeftScanner r2, c2
+   
+    MsgBox r2 & ", " & c2
+End Sub
+
+Function topLeftScanner(rOut, cOut)
+' Scan spreadsheet from the top-left corner for the first cell to fulfill certain criteria.
+' Row and column indices must be defined in the calling function and passed here for modification.
+'
+' Example:
+' Sub testScan()
+'     Dim r2 As Long
+'     Dim c2 As Long
+'     topLeftScanner r2, c2
+'
+'     MsgBox r2 & ", " & c2
+' End Sub
+'
+    Const maxLoopTime As Double = 5
+    
+    Dim RCSum As Long
+    Dim t0 As Double
+    
+    t0 = Timer()
+    For RCSum = 2 To 16385
+        For cOut = 1 To RCSum - 1
+            rOut = RCSum - cOut
+            If topLeftCriteria(Cells(rOut, cOut).value2) Then Exit Function
+        Next cOut
+        
+        If Timer() - t0 > maxLoopTime Then
+            MsgBox "Loop broken after " & maxLoopTime & " secs."
+            Exit For
+        End If
+    Next RCSum
+    
+    rOut = 0
+    cOut = 0
+    MsgBox "Top-left scan did not find any cell that fulfilled the criteria."
+End Function
+
+Function topLeftCriteria(value) As Boolean
+' Characteristics of the top-left-most cell being sought.
+'
+    If LenB(value) Then
+        If IsNumeric(value) Then
+            topLeftCriteria = True
+            Exit Function
+        End If
+    End If
 End Function
