@@ -1,5 +1,5 @@
 # VBA-non-project-specific-functions
-Library of general functions for VBA
+Library of VBA functions
 
 1. Create a collection of commonly used VBA functions for safe storage and convenient retrieval.
-2. ... Let's just start simple ;)
+   - Polish up and consolidate the various scattered VBA projects.
