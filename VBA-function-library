@@ -56,6 +56,15 @@ Function toLong(str) As Long
     toLong = result
 End Function
 
+Function Wait(waitSecs)
+    Dim Start As Double
+    
+    Start = Timer()
+    While Timer() < Start + waitSecs
+        DoEvents
+    Wend
+End Function
+
 ' ================================================================================================
 ' Generate a list of all files within the selected folder
 ' ================================================================================================
@@ -194,6 +203,35 @@ Function ArrArrToArr2D(ArrArr) As Variant()
     Next L2
     
     ArrArrToArr2D = Arr2D
+End Function
+
+Function Arr2DToArrArr(Arr2D, Optional byCols = False) As Variant()
+    Dim L2 As Long
+    Dim L3 As Long
+    Dim Dim1 As Long
+    Dim Dim2 As Long
+    Dim Arr1D() As Variant
+    Dim ArrArr() As Variant
+    
+    Dim1 = 1 - (byCols = True)
+    Dim2 = 1 - (Not byCols = True)
+    
+    ReDim ArrArr(LBound(Arr2D, Dim1) To UBound(Arr2D, Dim1))
+    ReDim Arr1D(LBound(Arr2D, Dim2) To UBound(Arr2D, Dim2))
+    
+    For L2 = LBound(Arr2D, Dim1) To UBound(Arr2D, Dim1)
+        For L3 = LBound(Arr2D, Dim2) To UBound(Arr2D, Dim2)
+            If Not byCols Then
+                Arr1D(L3) = Arr2D(L2, L3)
+            ElseIf byCols Then
+                Arr1D(L3) = Arr2D(L3, L2)
+            End If
+        Next L3
+        
+        ArrArr(L2) = Arr1D
+    Next L2
+    
+    Arr2DToArrArr = ArrArr
 End Function
 
 Function ReindexArr2D(Arr2D, Optional r1 = 0, Optional c1 = 0) As Variant()
