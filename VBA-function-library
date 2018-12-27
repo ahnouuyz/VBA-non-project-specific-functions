@@ -65,6 +65,37 @@ Function Wait(waitSecs)
     Wend
 End Function
 
+Sub removeBlankRows()
+    Dim L2 As Long
+    Dim S2 As String
+    Dim brRng As Range
+    Dim urArr()
+    Dim drArr
+    
+    ActiveSheet.Copy , ActiveSheet
+    
+    urArr = ActiveSheet.UsedRange.Value2
+    
+    For L2 = 1 To UBound(urArr)
+        If Application.CountA(Rows(L2)) = 0 Then
+            If Not brRng Is Nothing Then
+                Set brRng = Union(brRng, Rows(L2))
+            Else
+                Set brRng = Rows(L2)
+            End If
+        End If
+    Next L2
+    
+    drArr = Split(brRng.Address(0), ",")
+    For L2 = 1 To UBound(drArr) + 1
+        S2 = S2 & "  " & L2 & ". " & drArr(L2 - 1) & Chr(10)
+    Next L2
+    
+    brRng.Delete
+    MsgBox L2 - 1 & " rows were deleted:" & Chr(10) & S2
+    Debug.Print L2 - 1 & " rows were deleted:" & Chr(10) & S2
+End Sub
+
 ' ================================================================================================
 ' Generate a list of all files within the selected folder
 ' ================================================================================================
