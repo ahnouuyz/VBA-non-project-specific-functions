@@ -11,13 +11,18 @@ Sub Counter_by_Columns()
     Dim L2 As Long
     Dim iRow As Long
     Dim iCol As Long
+    Dim sheet_name As String
     Dim Arr2D()
     Dim urArr()
     Dim colArr()
     Dim valCountList()
     Dim valCountArrArrArr()
     
-    urArr = ActiveSheet.UsedRange.value
+    With ActiveSheet
+        urArr = .UsedRange.value
+        sheet_name = .Name
+    End With
+    
     colArr = Selection.EntireColumn.Resize(UBound(urArr)).value
     
     ReDim valCountArrArrArr(1 To UBound(colArr, 2))
@@ -46,6 +51,7 @@ Sub Counter_by_Columns()
     Next iCol
     
     Workbooks.Add
+    Sheets(1).Name = sheet_name
     
     For iCol = 1 To UBound(colArr, 2)
         Arr2D = ArrArrToArr2D(valCountArrArrArr(iCol))
@@ -54,6 +60,11 @@ Sub Counter_by_Columns()
     Next iCol
     
     Columns.AutoFit
+    
+    With ActiveWindow
+        .SplitRow = 2
+        .FreezePanes = True
+    End With
 End Sub
 
 Function decorateCounts(Arr2D, Optional r1 = 1, Optional c1 = 1)
