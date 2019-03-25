@@ -1,3 +1,10 @@
+' ============================================================================
+' Dependencies:
+' - quickSortArr1D()
+' - ArrArrToArr2D()
+' - PrintArr2D()
+' ============================================================================
+
 Sub Find_Similar_Rows()
 ' Sort table in order of ascending dissimilarity to a reference row.
 ' You have to select the range of columns for comparison.
