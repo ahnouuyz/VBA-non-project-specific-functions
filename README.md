@@ -1,5 +1,7 @@
 # vba-library
 Library of VBA source codes
 
-Codes from various projects have been dumped here.  
-With serendipitous inspiration, and if time permits, distill and refine every useful function and organize a general purpose library.
+General plan:  
+- Keep the source codes for individual projects separately in a folder.  
+- Create another folder to store groups of useful functions.  
+  - How this will be organized... is still a mystery...
