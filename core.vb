@@ -3,8 +3,8 @@
 ' ============================================================================
 
 Function getTable(Optional dropBlankRows = True) As Variant()
-    Dim hasFirst As Boolean
     Dim row As Long
+    Dim Arr1D() As Variant
     Dim Arr2D() As Variant
     Dim ArrArr() As Variant
     
@@ -13,8 +13,9 @@ Function getTable(Optional dropBlankRows = True) As Variant()
     If dropBlankRows Then
         hasFirst = False
         For row = LBound(Arr2D) To UBound(Arr2D)
-            If rowNotBlank(Arr2D, row) Then
-                appendRow ArrArr, Arr2D, row, hasFirst
+            Arr1D = getRow(Arr2D, row)
+            If Not arrIsEmpty(Arr1D) Then
+                appendVal ArrArr, Arr1D
             End If
         Next row
         Arr2D = ArrArrToArr2D(ArrArr)
@@ -23,7 +24,17 @@ Function getTable(Optional dropBlankRows = True) As Variant()
     getTable = Arr2D
 End Function
 
-Function appendRow(ArrArr, Arr2D, row, hasFirst)
+Function appendVal(Arr(), val, Optional base = 1)
+    If (Not Arr) <> -1 Then
+        ReDim Preserve Arr(LBound(Arr) To UBound(Arr) + 1)
+    Else
+        ReDim Arr(base To base)
+    End If
+    
+    Arr(UBound(Arr)) = val
+End Function
+
+Function getRow(Arr2D(), row)
     Dim col As Long
     ReDim Arr1D(LBound(Arr2D, 2) To UBound(Arr2D, 2))
     
@@ -31,29 +42,24 @@ Function appendRow(ArrArr, Arr2D, row, hasFirst)
         Arr1D(col) = Arr2D(row, col)
     Next col
     
-    If hasFirst Then
-        ReDim Preserve ArrArr(1 To UBound(ArrArr) + 1)
-    Else
-        ReDim ArrArr(1 To 1)
-        hasFirst = True
-    End If
-    
-    ArrArr(UBound(ArrArr)) = Arr1D
+    getRow = Arr1D
 End Function
 
-Function rowNotBlank(Arr2D, row) As Boolean
-    Dim col As Long
+Function arrIsEmpty(Arr1D()) As Boolean
+    Dim V2 As Variant
     
-    For col = LBound(Arr2D, 2) To UBound(Arr2D, 2)
-        If LenB(Arr2D(row, col)) Then
-            rowNotBlank = True
+    For Each V2 In Arr1D
+        If LenB(V2) Then
+            arrIsEmpty = False
             Exit Function
         End If
-    Next col
-    rowNotBlank = False
+    Next V2
+    arrIsEmpty = True
 End Function
 
-Function ArrArrToArr2D(ArrArr) As Variant()
+
+
+Function ArrArrToArr2D(ArrArr()) As Variant()
     Dim row As Long
     Dim col As Long
     Dim c1 As Long
