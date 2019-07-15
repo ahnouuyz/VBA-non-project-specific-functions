@@ -119,3 +119,31 @@ End Function
 Private Sub deleteButtons()
     ActiveSheet.Buttons.Delete
 End Sub
+
+
+
+Function numberToLetters(ByVal num) As String
+    Dim remainder As Long
+    Dim letters As String
+    
+    While num > 0
+        remainder = ((num - 1) Mod 26)
+        letters = Chr(remainder + Asc("A")) & letters
+        num = (num - remainder) \ 26
+    Wend
+    
+    numberToLetters = letters
+End Function
+
+Function lettersToNumber(ByVal letters) As Long
+    Dim power As Long
+    Dim number As Long
+    
+    letters = UCase(letters)
+    For power = 0 To Len(letters) - 1
+        number = number + (Asc(Right(letters, 1)) - Asc("A") + 1) * (26 ^ power)
+        letters = Left(letters, Len(letters) - 1)
+    Next power
+    
+    lettersToNumber = number
+End Function
