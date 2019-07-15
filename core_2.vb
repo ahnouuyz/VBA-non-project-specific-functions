@@ -15,48 +15,7 @@ Function inList(value, list) As Boolean
     Next V2
 End Function
 
-Function ArrArrToArr2D(ArrArr) As Variant()
-' Convert an array of arrays to a 2D array (retain original base).
-'
-    Dim row As Long
-    Dim col As Long
-    Dim c1 As Long
-    Dim cN As Long
-    
-    ' Find the left-most and right-most columns. -----------------------------
-    c1 = 2147483647 ' <-- This is Overkill.
-    For row = LBound(ArrArr) To UBound(ArrArr)
-        If Not IsEmpty(ArrArr(row)) Then
-            If c1 > LBound(ArrArr(row)) Then c1 = LBound(ArrArr(row))
-            If cN < UBound(ArrArr(row)) Then cN = UBound(ArrArr(row))
-        End If
-    Next row
-    ' ------------------------------------------------------------------------
-    
-    ReDim Arr2D(LBound(ArrArr) To UBound(ArrArr), c1 To cN) As Variant
-    
-    For row = LBound(ArrArr) To UBound(ArrArr)
-        If Not IsEmpty(ArrArr(row)) Then
-            For col = LBound(ArrArr(row)) To UBound(ArrArr(row))
-                Arr2D(row, col) = ArrArr(row)(col)
-            Next col
-        End If
-    Next row
-    
-    ArrArrToArr2D = Arr2D
-End Function
 
-Function PrintArr2D(Arr2D, Optional r1 = 1, Optional c1 = 1)
-' Print out 2D array on a spreadsheet.
-' Print at the specified coordinates (default: row 1, column 1).
-'
-    Dim nRows As Long
-    Dim nCols As Long
-    
-    nRows = UBound(Arr2D) - LBound(Arr2D) + 1
-    nCols = UBound(Arr2D, 2) - LBound(Arr2D, 2) + 1
-    Cells(r1, c1).Resize(nRows, nCols).value = Arr2D
-End Function
 
 Function swapValues(value1, value2)
     Dim V2
@@ -143,12 +102,7 @@ End Function
 ' Not frequently used yet.
 ' ===============================================================================
 
-Function pushToList(value, list)
-' Append the given value to the given list.
-'
-    ReDim Preserve list(LBound(list) To UBound(list) + 1)
-    list(UBound(list)) = value
-End Function
+
 
 Function Arr2DToArrArr(Arr2D, Optional byCols = False) As Variant()
     Dim L2 As Long
