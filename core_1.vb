@@ -2,40 +2,6 @@
 ' Unclassified
 ' ================================================================================================
 
-Function toString(num) As String
-' Convert the given number to letters.
-' Mainly to reference columns in Excel.
-'
-    Dim tNum As Long
-    Dim rLetter As Long
-    Dim result As String
-    
-    tNum = num
-    Do
-        rLetter = ((tNum - 1) Mod 26)
-        result = Chr(rLetter + 65) & result
-        tNum = (tNum - rLetter) \ 26
-    Loop While tNum > 0
-    
-    toString = result
-End Function
-
-Function toLong(str) As Long
-' Convert the given letters to a number.
-'
-    Dim L2 As Long
-    Dim result As Long
-    Dim tStr As String
-    
-    tStr = UCase(str)
-    For L2 = 0 To Len(str) - 1
-        result = result + (Asc(Right(tStr, 1)) - 64) * (26 ^ L2)
-        tStr = Left(tStr, Len(tStr) - 1)
-    Next L2
-    
-    toLong = result
-End Function
-
 Function Wait(waitSecs)
     Dim Start As Double
     
