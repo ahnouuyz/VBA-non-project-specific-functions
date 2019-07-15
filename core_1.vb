@@ -2,19 +2,6 @@
 ' Unclassified
 ' ================================================================================================
 
-Function inList(value, list) As Boolean
-' Check if the given value exists in the given list.
-'
-    Dim V2 As Variant
-    
-    For Each V2 In list
-        If value = V2 Then
-            inList = True
-            Exit Function
-        End If
-    Next V2
-End Function
-
 Function toString(num) As String
 ' Convert the given number to letters.
 ' Mainly to reference columns in Excel.
@@ -200,57 +187,6 @@ Function updateReportArrArr(Optional reportArrArr = Empty, Optional iFile = Empt
     End If
 End Function
 
-Function Arr2DToArrArr(Arr2D, Optional byCols = False) As Variant()
-    Dim L2 As Long
-    Dim L3 As Long
-    Dim Dim1 As Long
-    Dim Dim2 As Long
-    Dim Arr1D() As Variant
-    Dim ArrArr() As Variant
-    
-    Dim1 = 1 - (byCols = True)
-    Dim2 = 1 - (Not byCols = True)
-    
-    ReDim ArrArr(LBound(Arr2D, Dim1) To UBound(Arr2D, Dim1))
-    ReDim Arr1D(LBound(Arr2D, Dim2) To UBound(Arr2D, Dim2))
-    
-    For L2 = LBound(Arr2D, Dim1) To UBound(Arr2D, Dim1)
-        For L3 = LBound(Arr2D, Dim2) To UBound(Arr2D, Dim2)
-            If Not byCols Then
-                Arr1D(L3) = Arr2D(L2, L3)
-            ElseIf byCols Then
-                Arr1D(L3) = Arr2D(L3, L2)
-            End If
-        Next L3
-        
-        ArrArr(L2) = Arr1D
-    Next L2
-    
-    Arr2DToArrArr = ArrArr
-End Function
-
-Function ReindexArr2D(Arr2D, Optional r1 = 0, Optional c1 = 0) As Variant()
-' Reassign the base indices (default = 0) for both dimensions of a 2D array.
-'
-    Dim L2 As Long
-    Dim L3 As Long
-    Dim rN As Long
-    Dim cN As Long
-    
-    rN = UBound(Arr2D) - LBound(Arr2D) + 1 ' Number of rows
-    cN = UBound(Arr2D, 2) - LBound(Arr2D, 2) + 1 ' Number of columns
-    
-    ReDim NewArr2D(r1 To rN + r1 - 1, c1 To cN + c1 - 1) As Variant
-    
-    For L2 = r1 To rN + r1 - 1
-        For L3 = c1 To cN = c1 - 1
-            NewArr2D(L2, L3) = Arr2D(LBound(Arr2D) + L2 - r1, LBound(Arr2D, 2) + L3 - c1)
-        Next L3
-    Next L2
-    
-    ReindexArr2D = NewArr2D
-End Function
-
 ' ================================================================================================
 ' Read data from text files.
 ' ================================================================================================
@@ -324,104 +260,6 @@ Function TextArrToArrArr(TextArr, Optional Delimiter = vbTab) As Variant()
 End Function
 
 ' ================================================================================================
-' QuickSort (for array of values and array of arrays)
-' ================================================================================================
-
-Function swapValues(value1, value2)
-    Dim V2 As Variant
-    
-    V2 = value1
-    value1 = value2
-    value2 = V2
-End Function
-
-Function quickSortArr(Arr, Optional r1 = -1, Optional rN = -1)
-' Sort values of an array in ascending lexicographic order.
-'
-    Dim tr1 As Long
-    Dim trN As Long
-    Dim pivotValue As Variant
-    
-    If Not IsArray(Arr) Then
-        MsgBox "Not an array, cannot be sorted."
-        Exit Function
-    End If
-    
-    If r1 = -1 Then r1 = LBound(Arr)
-    If rN = -1 Then rN = UBound(Arr)
-    tr1 = r1
-    trN = rN
-    
-    ' Choose value in the middle as pivot.
-    pivotValue = Arr((r1 + rN) \ 2)
-    
-    Do While tr1 <= trN
-        ' Earliest value larger than pivot is in the wrong space.
-        Do While Arr(tr1) < pivotValue And tr1 < rN
-            tr1 = tr1 + 1
-        Loop
-        
-        ' Latest value smaller than pivot is in the wrong space.
-        Do While Arr(trN) > pivotValue And trN > r1
-            trN = trN - 1
-        Loop
-        
-        ' Swap positions.
-        If tr1 <= trN Then
-            swapValues Arr(tr1), Arr(trN)
-            tr1 = tr1 + 1
-            trN = trN - 1
-        End If
-    Loop
-    
-    If r1 < trN Then quickSortArr Arr, r1, trN
-    If tr1 < rN Then quickSortArr Arr, tr1, rN
-End Function
-
-Function quickSortArrArr(ArrArr, cKey, Optional r1 = -1, Optional rN = -1)
-' Sort an array of arrays in ascending lexicographic order w.r.t. a key column.
-'
-    Dim tr1 As Long
-    Dim trN As Long
-    Dim pivotValue As Variant
-    
-    If Not IsArray(ArrArr) Then
-        MsgBox "Not an array, cannot be sorted."
-        Exit Function
-    End If
-    
-    If r1 = -1 Then r1 = LBound(ArrArr)
-    If rN = -1 Then rN = UBound(ArrArr)
-    tr1 = r1
-    trN = rN
-    
-    ' Choose value in the middle as pivot.
-    pivotValue = ArrArr((r1 + rN) \ 2)(cKey)
-    
-    Do While tr1 <= trN
-        ' Earliest value larger than pivot is in the wrong space.
-        Do While ArrArr(tr1)(cKey) < pivotValue And tr1 < rN
-            tr1 = tr1 + 1
-        Loop
-        
-        ' Latest value smaller than pivot is in the wrong space.
-        Do While ArrArr(trN)(cKey) > pivotValue And trN > r1
-            trN = trN - 1
-        Loop
-        
-        ' Swap positions.
-        If tr1 <= trN Then
-            swapValues ArrArr(tr1), ArrArr(trN)
-            tr1 = tr1 + 1
-            trN = trN - 1
-        End If
-    Loop
-    
-    If r1 < trN Then quickSortArrArr ArrArr, cKey, r1, trN
-    If tr1 < rN Then quickSortArrArr ArrArr, cKey, tr1, rN
-End Function
-
-' ================================================================================================
 ' Indirect interaction with Excel
 ' ================================================================================================
 
@@ -452,14 +290,4 @@ Function makeLiteralArr2D(Arr2D) As Variant()
     Next L2
     
     makeLiteralArr2D = NewArr
-End Function
-
-' ================================================================================================
-' Direct interaction with Excel
-' ================================================================================================
-
-Function testCreateButton()
-    Workbooks.Add
-    
-    createButton Range("D5:G10"), "Test" & Chr(10) & "Button"
 End Function
