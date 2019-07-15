@@ -15,13 +15,6 @@ Function inList(value, list) As Boolean
     Next V2
 End Function
 
-Function pushToList(value, list)
-' Append the given value to the given list.
-'
-    ReDim Preserve list(LBound(list) To UBound(list) + 1)
-    list(UBound(list)) = value
-End Function
-
 Function toString(num) As String
 ' Convert the given number to letters.
 ' Mainly to reference columns in Excel.
@@ -205,35 +198,6 @@ Function updateReportArrArr(Optional reportArrArr = Empty, Optional iFile = Empt
             updateReportArrArr = updateReportArrArr(newArrArr, iFile)
         End If
     End If
-End Function
-
-Function ArrArrToArr2D(ArrArr) As Variant()
-' Convert an array of arrays to a 2D array (retain original base).
-'
-    Dim L2 As Long
-    Dim L3 As Long
-    Dim c1 As Long
-    Dim cN As Long
-    
-    c1 = 2147483647
-    For L2 = LBound(ArrArr) To UBound(ArrArr)
-        If Not IsEmpty(ArrArr(L2)) Then
-            If c1 > LBound(ArrArr(L2)) Then c1 = LBound(ArrArr(L2))
-            If cN < UBound(ArrArr(L2)) Then cN = UBound(ArrArr(L2))
-        End If
-    Next L2
-    
-    ReDim Arr2D(LBound(ArrArr) To UBound(ArrArr), c1 To cN) As Variant
-    
-    For L2 = LBound(ArrArr) To UBound(ArrArr)
-        If Not IsEmpty(ArrArr(L2)) Then
-            For L3 = LBound(ArrArr(L2)) To UBound(ArrArr(L2))
-                Arr2D(L2, L3) = ArrArr(L2)(L3)
-            Next L3
-        End If
-    Next L2
-    
-    ArrArrToArr2D = Arr2D
 End Function
 
 Function Arr2DToArrArr(Arr2D, Optional byCols = False) As Variant()
@@ -498,34 +462,4 @@ Function testCreateButton()
     Workbooks.Add
     
     createButton Range("D5:G10"), "Test" & Chr(10) & "Button"
-End Function
-
-Function createButton(PositionRng, ButtonText, Optional OnAction = "doNothing")
-    With PositionRng
-        ActiveSheet.Buttons.Add(.Left, .Top, .Width, .Height).Text = ButtonText
-    End With
-    
-    With ActiveSheet
-        With .Shapes(.Shapes.Count)
-            .Placement = xlMoveAndSize
-            .OnAction = OnAction
-        End With
-    End With
-End Function
-
-Function doNothing()
-    
-End Function
-
-Sub deleteButtons()
-    ActiveSheet.Buttons.Delete
-End Sub
-
-Function PrintArr2D(Arr2D, Optional r1 = 1, Optional c1 = 1)
-    Dim rN As Long
-    Dim cN As Long
-    
-    rN = UBound(Arr2D) - LBound(Arr2D) + 1
-    cN = UBound(Arr2D, 2) - LBound(Arr2D, 2) + 1
-    Cells(r1, c1).Resize(rN, cN).value2 = Arr2D
 End Function
